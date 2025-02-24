@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: linear-gradient(135deg, #89f7fe,rgb(193, 193, 105));
+            margin: 50px;
+            color: white;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            backdrop-filter: blur(10px);
+        }
+        input {
+            padding: 10px;
+            width: 80%;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #weather-info {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Weather App</h2>
+        <input type="text" id="city" placeholder="Enter city name">
+        <button onclick="getWeather()">Get Weather</button>
+        <div id="weather-info"></div>
+    </div>
+    
+    <script>
+        async function getWeather() {
+            const city = document.getElementById("city").value;
+            const apiKey = "61c3f76be3ec92c7ef9b556d61349485";
+            
+            try {
+                const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`);
+                const data = await response.json();
+                
+                if (data.cod === 200) {
+                    document.getElementById("weather-info").innerHTML = `
+                        <h3>Weather in ${data.name}</h3>
+                        <p>Temperature: ${data.main.temp}°C</p>
+                        <p>Humidity: ${data.main.humidity}%</p>
+                        <p>Condition: ${data.weather[0].description}</p>
+                    `;
+                } else {
+                    document.getElementById("weather-info").innerHTML = `<p style="color: red;">City not found!</p>`;
+                }
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                document.getElementById("weather-info").innerHTML = `<p style="color: red;">Error fetching weather data.</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
